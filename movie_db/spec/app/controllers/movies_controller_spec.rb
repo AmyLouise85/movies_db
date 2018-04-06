@@ -1,13 +1,18 @@
 require 'spec_helper'
 
-RSpec.describe "/movies_controller" do
-  pending "add some examples to #{__FILE__}" do
-    before do
-      get "/movies_controller"
+RSpec.describe "/movies" do
+  before do
+    @movie = Movie.create!(title: "Rambo", year: 1982, description: "Sylvester Stallone goes mental in the woods")
+  end
+  describe "viewing a movie" do
+    it "should show the movie title" do
+      get "/movies/#{@movie.id}"
+      expect(last_response.body).to include @movie.title
     end
-
-    it "returns hello world" do
-      expect(last_response.body).to eq "Hello World"
+    it "should show the movie description and year" do
+      get "/movies/#{@movie.id}"
+      expect(last_response.body).to include @movie.year.to_s
+      expect(last_response.body).to include @movie.description
     end
   end
 end

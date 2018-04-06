@@ -1,15 +1,25 @@
 MovieDb::App.controllers :movies do
 
   get :index, :map => '/' do #creats a sub directory, lists items and maps it onto '/'
-    @movies = Movie.order(rating: :desc).limit(6)
+    @movies = Movie.order(rating: :desc).limit(5)
     render 'index'
   end
 
   get :index, :with => :id do
     @movie =Movie.find(params[:id])
-    @movie.title
+    @title = @movie.title
+    @genres = @movie.genres
+    render 'movie'
   end
 
+ post :index do
+   @movie =Movie.new(params[:movie])
+   if @movie.save
+     redirect "/movies/#{@movie.id}"
+   else
+     "error"
+   end
+ end
   # get :index, :map => '/foo/bar' do
   #   session[:foo] = 'bar'
   #   render 'index'
